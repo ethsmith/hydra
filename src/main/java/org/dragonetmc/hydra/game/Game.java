@@ -4,14 +4,22 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.dragonetmc.hydra.GameManager;
 import org.dragonetmc.hydra.level.Level;
+import org.dragonetmc.hydra.team.FFA;
 import org.dragonetmc.hydra.team.Party;
 import org.dragonetmc.hydra.team.Solo;
 import org.dragonetmc.hydra.team.Teams;
 import org.dragonetmc.hydra.util.AnnotationUtil;
 
+import java.util.List;
+
 public abstract class Game {
 
-    public Game(Level level) {
+    private final String id;
+    int minimumPlayers;
+    int maximumPlayers;
+
+    public Game(String id, Level level) {
+        this.id = id;
         GameManager.setLevel(level);
 
         if (AnnotationUtil.checkTeamType(Party.class))
@@ -20,13 +28,45 @@ public abstract class Game {
         else if (AnnotationUtil.checkTeamType(Solo.class))
             if (!GameManager.createTeam("Solo"))
                 Bukkit.getServer().getLogger().severe("Could not create solo play for game");
-        else if (AnnotationUtil.checkTeamType(Teams.class))
-            if (!GameManager.createTeams(AnnotationUtil.checkTeamConditions(Teams.class).get(2)))
+        else if (AnnotationUtil.checkTeamType(Teams.class)) {
+            List<Integer> conditions = AnnotationUtil.checkTeamConditions(Teams.class);
+            if (!GameManager.createTeams(conditions.get(2))) {
+                minimumPlayers = conditions.get(0);
+                maximumPlayers = conditions.get(1);
                 Bukkit.getServer().getLogger().severe("Could not create teams for game");
+            }
+        } else if (AnnotationUtil.checkTeamType(FFA.class)) {
+            List<Integer> conditions = AnnotationUtil.checkTeamConditions(FFA.class);
+            if (!GameManager.createTeams(conditions.get(2))) {
+                minimumPlayers = conditions.get(0);
+                maximumPlayers = conditions.get(1);
+                Bukkit.getServer().getLogger().severe("Could not create FFA play for game");
+            }
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int getMinimumPlayers() {
+        return minimumPlayers;
+    }
+
+    public void setMinimumPlayers(int minimumPlayers) {
+        this.minimumPlayers = minimumPlayers;
+    }
+
+    public int getMaximumPlayers() {
+        return maximumPlayers;
+    }
+
+    public void setMaximumPlayers(int maximumPlayers) {
+        this.maximumPlayers = maximumPlayers;
     }
 
     @GameState(id = "initialize", priority = -1)
-    public final void init() {
+    public final void initialize() {
 
     }
 
@@ -35,6 +75,16 @@ public abstract class Game {
 
     }
 
+    public void join(Player player) {
+
+    }
+
+    public void leave(Player player) {
+
+    }
+
+    public abstract void init();
+
     public abstract void start();
 
     public abstract void results();
@@ -42,8 +92,4 @@ public abstract class Game {
     public abstract void end();
 
     public abstract void cancel();
-
-    public abstract void join(Player player);
-
-    public abstract void leave(Player player);
 }

@@ -13,15 +13,20 @@ import org.dragonetmc.hydra.team.Teams;
 @Teams(min = 2, max = 4, amount = 2)
 public class MGame extends Game {
 
-    public MGame(Level level) {
-        super(level);
+    public MGame(String id, Level level) {
+        super(id, level);
+    }
+
+    @Override
+    @GameState(id = "init", priority = 0)
+    public void init() {
+        // ...
     }
 
     @Override
     @GameState(id = "start", priority = 1)
     public void start() {
         // ...
-        GameManager.setGameState("results");
         if (GameManager.getLevel() instanceof WorldLevel) {
             WorldLevel level = (WorldLevel) GameManager.getLevel();
             World world = level.getWorld();
@@ -32,6 +37,7 @@ public class MGame extends Game {
                 }
             }
         }
+        GameManager.setGameState("results");
     }
 
     @Override
