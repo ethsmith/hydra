@@ -16,6 +16,7 @@ public abstract class Game {
 
     private final String id;
     int minimumPlayers;
+    int currentPlayers;
     int maximumPlayers;
 
     public Game(String id, Level level) {
@@ -55,6 +56,14 @@ public abstract class Game {
 
     public void setMinimumPlayers(int minimumPlayers) {
         this.minimumPlayers = minimumPlayers;
+    }
+
+    public int getCurrentPlayers() {
+        return currentPlayers;
+    }
+
+    public void setCurrentPlayers(int currentPlayers) {
+        this.currentPlayers = currentPlayers;
     }
 
     public int getMaximumPlayers() {
