@@ -94,7 +94,7 @@ public class GameManager {
 
     private static void setGameStateByIdentifier(Object identifier, Object... args) throws Exception {
         Method method;
-        String gameState = "";
+        String gameState;
         int priority;
 
         if (identifier instanceof String) {
