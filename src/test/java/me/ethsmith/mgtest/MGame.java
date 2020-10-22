@@ -1,13 +1,11 @@
 package me.ethsmith.mgtest;
 
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.dragonetmc.hydra.GameManager;
 import org.dragonetmc.hydra.game.Game;
 import org.dragonetmc.hydra.game.GameState;
 import org.dragonetmc.hydra.level.Level;
 import org.dragonetmc.hydra.level.WorldLevel;
-import org.dragonetmc.hydra.team.Team;
 import org.dragonetmc.hydra.team.Teams;
 
 @Teams(min = 2, max = 4, amount = 2)
@@ -21,23 +19,16 @@ public class MGame extends Game {
     @GameState(id = "init", priority = 0)
     public void init() {
         // ...
+        GameManager.setGameState("start");
     }
 
     @Override
     @GameState(id = "start", priority = 1)
     public void start() {
-        // ...
         if (GameManager.getLevel() instanceof WorldLevel) {
             WorldLevel level = (WorldLevel) GameManager.getLevel();
-            World world = level.getWorld();
-
-            for (Team team : GameManager.getTeams()) {
-                for (Player player : team.getPlayers()) {
-                    player.teleport(world.getSpawnLocation());
-                }
-            }
+            level.teleport(false);
         }
-        GameManager.setGameState("results");
     }
 
     @Override
