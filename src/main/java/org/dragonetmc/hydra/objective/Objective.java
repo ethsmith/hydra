@@ -2,7 +2,7 @@ package org.dragonetmc.hydra.objective;
 
 public interface Objective {
 
-    void getName();
+    String getName();
 
     void execute();
 }
