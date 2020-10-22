@@ -84,10 +84,15 @@
 <!--            <artifactId>hydra-api</artifactId>-->
 <!--            <version>main-82dad7ab3d-1</version>-->
 <!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.reflections</groupId>-->
+<!--            <artifactId>reflections</artifactId>-->
+<!--            <version>0.9.12</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>org.reflections</groupId>
+            <groupId>com.github.ethsmith</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.12</version>
+            <version>0.9.13-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
