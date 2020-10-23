@@ -1,5 +1,6 @@
 package org.dragonetmc.hydra.util;
 
+import org.dragonetmc.hydra.GameManager;
 import org.dragonetmc.hydra.game.GameState;
 import org.dragonetmc.hydra.team.Party;
 import org.dragonetmc.hydra.team.Teams;
@@ -41,14 +42,14 @@ public class AnnotationUtil {
     }
 
     public static boolean checkTeamType(Class<? extends Annotation> annotation) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()).setScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
+        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage(GameManager.getGameState())).setScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(annotation);
 
         return !classes.isEmpty();
     }
 
     public static List<Integer> checkTeamConditions(Class<? extends Annotation> annotation) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()).setScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
+        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage(GameManager.getGameState())).setScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(annotation);
 
         for (Class<?> clazz : classes) {
@@ -64,7 +65,7 @@ public class AnnotationUtil {
     }
 
     private static Set<Method> findMethodsWithAnnotation(Class<? extends Annotation> annotation) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath()).setScanners(new SubTypesScanner(), new MethodAnnotationsScanner()));
+        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage(GameManager.getGameState())).setScanners(new SubTypesScanner(), new MethodAnnotationsScanner()));
         return reflections.getMethodsAnnotatedWith(annotation);
     }
 }

@@ -20,6 +20,7 @@ public class GameManager {
     private static final Set<Objective> objectives = new HashSet<>();
     private static String gameState = "initialize";
     private static Level level;
+    private static String mainPackage = "";
 
     private static final ScheduledExecutorService objectiveTracker = Executors.newScheduledThreadPool(1);
 
@@ -70,6 +71,14 @@ public class GameManager {
 
     public static void setLevel(Level level) {
         GameManager.level = level;
+    }
+
+    public static String getMainPackage() {
+        return mainPackage;
+    }
+
+    public static void setMainPackage(String mainPackage) {
+        GameManager.mainPackage = mainPackage;
     }
 
     public static boolean createTeam(String type) {
