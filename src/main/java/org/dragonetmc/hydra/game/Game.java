@@ -9,6 +9,7 @@ import org.dragonetmc.hydra.util.AnnotationUtil;
 
 import java.util.List;
 
+@GameStates(states = {"initialize", "finish"})
 public abstract class Game {
 
     private final String id;
@@ -80,12 +81,11 @@ public abstract class Game {
         this.maximumPlayers = maximumPlayers;
     }
 
-    @GameState(id = "initialize", priority = -1)
+
     public final void initialize() {
 
     }
 
-    @GameState(id = "finish", priority = 2147483647)
     public final void finish() {
 
     }
