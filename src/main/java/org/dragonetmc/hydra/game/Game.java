@@ -17,9 +17,8 @@ public abstract class Game {
     private int currentPlayers;
     private int maximumPlayers;
 
-    public Game(String main, String id, Level level) {
+    public Game(String id, Level level) {
         this.id = id;
-        GameManager.setMainPackage(main);
         GameManager.setLevel(level);
 
         if (AnnotationUtil.checkTeamType(Party.class)) {

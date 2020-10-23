@@ -20,7 +20,6 @@ public class GameManager {
     private static final ScheduledExecutorService objectiveTracker = Executors.newScheduledThreadPool(1);
     private static String gameState = "initialize";
     private static Level level;
-    private static String mainPackage = "";
 
     public static String getGameState() {
         return gameState;
@@ -61,14 +60,6 @@ public class GameManager {
 
     public static void setLevel(Level level) {
         GameManager.level = level;
-    }
-
-    public static String getMainPackage() {
-        return mainPackage;
-    }
-
-    public static void setMainPackage(String mainPackage) {
-        GameManager.mainPackage = mainPackage;
     }
 
     public static boolean createTeam(String type) {
