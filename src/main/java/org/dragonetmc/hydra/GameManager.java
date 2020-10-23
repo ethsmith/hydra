@@ -1,6 +1,5 @@
 package org.dragonetmc.hydra;
 
-import org.dragonetmc.hydra.game.GameState;
 import org.dragonetmc.hydra.level.Level;
 import org.dragonetmc.hydra.objective.Objective;
 import org.dragonetmc.hydra.team.*;
@@ -18,11 +17,10 @@ public class GameManager {
     private static final Map<Integer, Method> gameStatesByPriority = new HashMap<>();
     private static final List<Team> teams = new LinkedList<>();
     private static final Set<Objective> objectives = new HashSet<>();
+    private static final ScheduledExecutorService objectiveTracker = Executors.newScheduledThreadPool(1);
     private static String gameState = "initialize";
     private static Level level;
     private static String mainPackage = "";
-
-    private static final ScheduledExecutorService objectiveTracker = Executors.newScheduledThreadPool(1);
 
     public static String getGameState() {
         return gameState;
@@ -39,14 +37,6 @@ public class GameManager {
     public static void setGameState(String gameState, Object... args) {
         try {
             setGameStateByIdentifier(gameState, args);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void setGameState(int priority, Object... args) {
-        try {
-            setGameStateByIdentifier(priority, args);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,23 +91,12 @@ public class GameManager {
         return teams.size() != 0;
     }
 
-    private static void setGameStateByIdentifier(Object identifier, Object... args) throws Exception {
-        Method method;
-        String gameState;
-        int priority;
-
-        if (identifier instanceof String) {
-            gameState = (String) identifier;
-            method = AnnotationUtil.findGameStateWithId(gameState);
-        } else {
-            priority = (int) identifier;
-            method = AnnotationUtil.findGameStateWithPriority(priority);
-        }
+    private static void setGameStateByIdentifier(String identifier, Object... args) throws Exception {
+        Method method = AnnotationUtil.findGameStateWithId(identifier);
 
         if (method != null) {
-            GameState gameStateAnnotation = method.getAnnotation(GameState.class);
-            GameManager.gameState = gameStateAnnotation.id();
-            GameManager.getGameStatesById().put(gameStateAnnotation.id(), method);
+            GameManager.gameState = identifier;
+            GameManager.getGameStatesById().put(identifier, method);
 
             method.invoke(GameManager.class, args);
         }

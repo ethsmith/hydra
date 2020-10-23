@@ -7,9 +7,9 @@ import java.util.List;
 
 public class PartyTeam extends Team {
 
-    private String name = "team-" + GameManager.getTeams().size();
     private final int min;
     private final int max;
+    private String name = "team-" + GameManager.getTeams().size();
 
     public PartyTeam(List<Integer> conditions) {
         min = conditions.get(0);

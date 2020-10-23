@@ -1,9 +1,9 @@
 package org.dragonetmc.hydra.level;
 
 public abstract class Level {
+    private final boolean clone;
     private String id;
     private Level source;
-    private final boolean clone;
 
     public Level(String id) {
         this.id = id;
