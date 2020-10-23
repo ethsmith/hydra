@@ -1,5 +1,6 @@
 package org.dragonetmc.hydra.game;
 
+import org.atteo.classindex.ClassIndex;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.dragonetmc.hydra.GameManager;
@@ -49,6 +50,12 @@ public abstract class Game {
             } else {
                 Bukkit.getServer().getLogger().info("Created FFA play for your game!");
             }
+        } else {
+            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(Party.class).toString());
+            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(Solo.class).toString());
+            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(Teams.class).toString());
+            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(FFA.class).toString());
+            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(GameStates.class).toString());
         }
     }
 
