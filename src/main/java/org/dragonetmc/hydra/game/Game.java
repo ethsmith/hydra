@@ -12,9 +12,9 @@ import java.util.List;
 public abstract class Game {
 
     private final String id;
-    int minimumPlayers;
-    int currentPlayers;
-    int maximumPlayers;
+    private int minimumPlayers;
+    private int currentPlayers;
+    private int maximumPlayers;
 
     public Game(String main, String id, Level level) {
         this.id = id;
