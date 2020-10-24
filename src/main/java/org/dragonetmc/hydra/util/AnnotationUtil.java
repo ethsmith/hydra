@@ -2,7 +2,9 @@ package org.dragonetmc.hydra.util;
 
 import org.atteo.classindex.ClassIndex;
 import org.dragonetmc.hydra.game.GameStates;
+import org.dragonetmc.hydra.team.FFA;
 import org.dragonetmc.hydra.team.Party;
+import org.dragonetmc.hydra.team.Solo;
 import org.dragonetmc.hydra.team.Teams;
 
 import java.lang.annotation.Annotation;
@@ -24,8 +26,17 @@ public class AnnotationUtil {
         return null;
     }
 
-    public static boolean checkTeamType(Class<? extends Annotation> annotation) {
-        return ClassIndex.getAnnotated(annotation).iterator().hasNext();
+    public static String checkTeamType() {
+        if (ClassIndex.getAnnotated(Party.class).iterator().hasNext())
+            return "Party";
+        else if (ClassIndex.getAnnotated(Teams.class).iterator().hasNext())
+            return "Teams";
+        else if (ClassIndex.getAnnotated(FFA.class).iterator().hasNext())
+            return "FFA";
+        else if (ClassIndex.getAnnotated(Solo.class).iterator().hasNext())
+            return "Solo";
+        else
+            return "Unknown Type";
     }
 
     public static List<Integer> checkTeamConditions(Class<? extends Annotation> annotation) {

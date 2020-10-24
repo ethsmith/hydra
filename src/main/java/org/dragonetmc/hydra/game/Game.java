@@ -22,17 +22,17 @@ public abstract class Game {
         this.id = id;
         GameManager.setLevel(level);
 
-        if (AnnotationUtil.checkTeamType(Party.class)) {
+        if (AnnotationUtil.checkTeamType().equals("Party")) {
             if (!GameManager.createTeam("Party"))
                 Bukkit.getServer().getLogger().severe("Could not create party for game");
             else
                 Bukkit.getServer().getLogger().info("Created party for your game!");
-        } else if (AnnotationUtil.checkTeamType(Solo.class)) {
+        } else if (AnnotationUtil.checkTeamType().equals("Solo")) {
             if (!GameManager.createTeam("Solo"))
                 Bukkit.getServer().getLogger().severe("Could not create solo play for game");
             else
                 Bukkit.getServer().getLogger().info("Created solo play your game!");
-        } else if (AnnotationUtil.checkTeamType(Teams.class)) {
+        } else if (AnnotationUtil.checkTeamType().equals("Teams")) {
             List<Integer> conditions = AnnotationUtil.checkTeamConditions(Teams.class);
             if (!GameManager.createTeams(conditions.get(2))) {
                 minimumPlayers = conditions.get(0);
@@ -41,7 +41,7 @@ public abstract class Game {
             } else {
                 Bukkit.getServer().getLogger().info("Created teams for your game!");
             }
-        } else if (AnnotationUtil.checkTeamType(FFA.class)) {
+        } else if (AnnotationUtil.checkTeamType().equals("FFA")) {
             List<Integer> conditions = AnnotationUtil.checkTeamConditions(FFA.class);
             if (!GameManager.createTeams(conditions.get(2))) {
                 minimumPlayers = conditions.get(0);
