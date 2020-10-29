@@ -32,7 +32,7 @@ public class AnnotationScanner {
         Mode mode = getMode(game);
 
         if (mode != null) {
-            type = mode.type();
+            type = mode.value();
             if (GameManager.getMode() == null || GameManager.getMode() != type)
                 GameManager.setMode(type);
         }
@@ -41,7 +41,7 @@ public class AnnotationScanner {
 
     public static int[] getModeSettings(Game game) {
         Mode mode = getMode(game);
-        ModeType type = mode.type();
+        ModeType type = mode.value();
 
         if (type == ModeType.FFA || type == ModeType.TEAMS)
             return new int[]{mode.min(), mode.max(), mode.amount()};
