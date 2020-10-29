@@ -24,6 +24,10 @@ public class GameManager {
     private static String gameState = "initialize";
     private static Level level;
     private static ModeType mode;
+    private static boolean objectivesComplete;
+    private static boolean changeStateOnObjectivesComplete = true;
+    private static String objectivesCompleteState = "results";
+    private static Object[] objectivesCompleteStateArgs = null;
 
     public static String getGameState() {
         return gameState;
@@ -51,7 +55,31 @@ public class GameManager {
 
     public static void addObjective(Objective objective) {
         objectives.add(objective);
-        objectiveTracker.scheduleAtFixedRate(objective::execute, 500, 500, TimeUnit.MILLISECONDS);
+        objectiveTracker.scheduleAtFixedRate(() -> {
+            objective.execute();
+            checkObjectives();
+            if (objectivesComplete)
+                if (changeStateOnObjectivesComplete)
+                    if (objectivesCompleteStateArgs != null)
+                        // The scheduling may be unnecessary, I will test and find out
+                        objectiveTracker.schedule(() -> setGameState(objectivesCompleteState, objectivesCompleteStateArgs), 2, TimeUnit.SECONDS);
+                    else
+                        setGameState(objectivesCompleteState);
+        }, 500, 500, TimeUnit.MILLISECONDS);
+    }
+
+    public static void changeStateOnObjectivesComplete(boolean changeState) {
+        GameManager.changeStateOnObjectivesComplete = changeState;
+    }
+
+    public static void setObjectivesCompleteState(String objectivesCompleteState, Object... args) {
+        GameManager.objectivesCompleteState = objectivesCompleteState;
+        if (args != null && args.length > 0)
+            objectivesCompleteStateArgs = args;
+    }
+
+    public static void setObjectivesCompleteStateArgs(Object[] objectivesCompleteStateArgs) {
+        GameManager.objectivesCompleteStateArgs = objectivesCompleteStateArgs;
     }
 
     public static Level getLevel() {
@@ -68,6 +96,14 @@ public class GameManager {
 
     public static void setMode(ModeType mode) {
         GameManager.mode = mode;
+    }
+
+    public static boolean isObjectivesComplete() {
+        return objectivesComplete;
+    }
+
+    public static void setObjectivesComplete(boolean objectivesComplete) {
+        GameManager.objectivesComplete = objectivesComplete;
     }
 
     public static boolean createTeam(Game game) {
@@ -97,5 +133,14 @@ public class GameManager {
                 method.invoke(GameManager.class, args);
             }
         }
+    }
+
+    private static void checkObjectives() {
+        int objectivesCompleted = 0;
+        for (Objective objective : objectives)
+            if (objective.isComplete()) objectivesCompleted++;
+
+        if (objectivesCompleted == objectives.size())
+            objectivesComplete = true;
     }
 }

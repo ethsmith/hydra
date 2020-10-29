@@ -4,5 +4,9 @@ public interface Objective {
 
     String getName();
 
+    boolean isComplete();
+
+    boolean setComplete();
+
     void execute();
 }
