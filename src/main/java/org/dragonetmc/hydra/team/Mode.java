@@ -11,9 +11,9 @@ public @interface Mode {
 
     ModeType type();
 
-    int min();
+    int min() default 1;
 
-    int max();
+    int max() default 1;
 
-    int amount();
+    int amount() default 1;
 }
