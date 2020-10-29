@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Mode {
 
-    ModeType type();
+    ModeType value();
 
     int min() default 1;
 
