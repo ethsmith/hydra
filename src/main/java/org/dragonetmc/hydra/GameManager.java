@@ -26,6 +26,7 @@ public class GameManager {
     private static ModeType mode;
     private static boolean objectivesComplete;
     private static boolean changeStateOnObjectivesComplete = true;
+    private static boolean joinable = true;
     private static String objectivesCompleteState = "results";
     private static Object[] objectivesCompleteStateArgs = null;
 
@@ -70,6 +71,14 @@ public class GameManager {
 
     public static void changeStateOnObjectivesComplete(boolean changeState) {
         GameManager.changeStateOnObjectivesComplete = changeState;
+    }
+
+    public static boolean isJoinable() {
+        return joinable;
+    }
+
+    public static void setJoinable(boolean joinable) {
+        GameManager.joinable = joinable;
     }
 
     public static void setObjectivesCompleteState(String objectivesCompleteState, Object... args) {

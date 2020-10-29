@@ -88,14 +88,18 @@ public abstract class Game {
     }
 
     public void join(Player player) {
-        int index = 0;
+        if (GameManager.isJoinable()) {
+            int index = 0;
 
-        for (int i = 0; i < GameManager.getTeams().size(); i++) {
-            Team team = GameManager.getTeams().get(i);
-            if (team.getPlayers().size() < GameManager.getTeams().get(index).getPlayers().size())
-                index = i;
+            for (int i = 0; i < GameManager.getTeams().size(); i++) {
+                Team team = GameManager.getTeams().get(i);
+                if (team.getPlayers().size() < GameManager.getTeams().get(index).getPlayers().size())
+                    index = i;
+            }
+            GameManager.getTeams().get(index).join(player);
+        } else {
+            player.kickPlayer("This lobby is not joinable!");
         }
-        GameManager.getTeams().get(index).join(player);
     }
 
     public void leave(Player player) {
