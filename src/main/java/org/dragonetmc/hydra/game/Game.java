@@ -1,16 +1,13 @@
 package org.dragonetmc.hydra.game;
 
-import org.atteo.classindex.ClassIndex;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.dragonetmc.hydra.GameManager;
+import org.dragonetmc.hydra.annotation.AnnotationScanner;
 import org.dragonetmc.hydra.level.Level;
-import org.dragonetmc.hydra.team.*;
-import org.dragonetmc.hydra.util.AnnotationUtil;
+import org.dragonetmc.hydra.team.ModeType;
+import org.dragonetmc.hydra.team.Team;
 
-import java.util.List;
-
-@GameStates(states = {"initialize", "finish"})
 public abstract class Game {
 
     private final String id;
@@ -22,40 +19,34 @@ public abstract class Game {
         this.id = id;
         GameManager.setLevel(level);
 
-        if (AnnotationUtil.checkTeamType().equals("Party")) {
-            if (!GameManager.createTeam("Party"))
+        if (GameManager.getMode() == ModeType.PARTY) {
+            if (!GameManager.createTeam(this))
                 Bukkit.getServer().getLogger().severe("Could not create party for game");
             else
                 Bukkit.getServer().getLogger().info("Created party for your game!");
-        } else if (AnnotationUtil.checkTeamType().equals("Solo")) {
-            if (!GameManager.createTeam("Solo"))
+        } else if (GameManager.getMode() == ModeType.SOLO) {
+            if (!GameManager.createTeam(this))
                 Bukkit.getServer().getLogger().severe("Could not create solo play for game");
             else
                 Bukkit.getServer().getLogger().info("Created solo play your game!");
-        } else if (AnnotationUtil.checkTeamType().equals("Teams")) {
-            List<Integer> conditions = AnnotationUtil.checkTeamConditions(Teams.class);
-            if (!GameManager.createTeams(conditions.get(2))) {
-                minimumPlayers = conditions.get(0);
-                maximumPlayers = conditions.get(1);
+        } else if (GameManager.getMode() == ModeType.TEAMS) {
+            int[] settings = AnnotationScanner.getModeSettings(this);
+            if (!GameManager.createTeams(settings[2])) {
+                minimumPlayers = settings[0];
+                maximumPlayers = settings[1];
                 Bukkit.getServer().getLogger().severe("Could not create teams for game");
             } else {
                 Bukkit.getServer().getLogger().info("Created teams for your game!");
             }
-        } else if (AnnotationUtil.checkTeamType().equals("FFA")) {
-            List<Integer> conditions = AnnotationUtil.checkTeamConditions(FFA.class);
-            if (!GameManager.createTeams(conditions.get(2))) {
-                minimumPlayers = conditions.get(0);
-                maximumPlayers = conditions.get(1);
+        } else if (GameManager.getMode() == ModeType.FFA) {
+            int[] settings = AnnotationScanner.getModeSettings(this);
+            if (!GameManager.createTeams(settings[2])) {
+                minimumPlayers = settings[0];
+                maximumPlayers = settings[1];
                 Bukkit.getServer().getLogger().severe("Could not create FFA play for game");
             } else {
                 Bukkit.getServer().getLogger().info("Created FFA play for your game!");
             }
-        } else {
-            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(Party.class).toString());
-            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(Solo.class).toString());
-            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(Teams.class).toString());
-            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(FFA.class).toString());
-            Bukkit.getServer().getLogger().severe("The only tags are " + ClassIndex.getAnnotated(GameStates.class).toString());
         }
     }
 

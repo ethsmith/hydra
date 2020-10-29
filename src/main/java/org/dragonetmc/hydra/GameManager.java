@@ -1,36 +1,36 @@
 package org.dragonetmc.hydra;
 
+import org.dragonetmc.hydra.annotation.AnnotationCache;
+import org.dragonetmc.hydra.annotation.AnnotationScanner;
+import org.dragonetmc.hydra.game.Game;
 import org.dragonetmc.hydra.level.Level;
 import org.dragonetmc.hydra.objective.Objective;
 import org.dragonetmc.hydra.team.*;
-import org.dragonetmc.hydra.util.AnnotationUtil;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class GameManager {
 
-    private static final Map<String, Method> gameStatesById = new HashMap<>();
-    private static final Map<Integer, Method> gameStatesByPriority = new HashMap<>();
     private static final List<Team> teams = new LinkedList<>();
     private static final Set<Objective> objectives = new HashSet<>();
     private static final ScheduledExecutorService objectiveTracker = Executors.newScheduledThreadPool(1);
     private static String gameState = "initialize";
     private static Level level;
+    private static ModeType mode;
 
     public static String getGameState() {
         return gameState;
     }
 
-    public static Map<String, Method> getGameStatesById() {
-        return gameStatesById;
-    }
-
-    public static Map<Integer, Method> getGameStatesByPriority() {
-        return gameStatesByPriority;
+    public static Set<Method> getGameStates() {
+        return AnnotationCache.getGameStateCache();
     }
 
     public static void setGameState(String gameState, Object... args) {
@@ -51,7 +51,7 @@ public class GameManager {
 
     public static void addObjective(Objective objective) {
         objectives.add(objective);
-        objectiveTracker.scheduleAtFixedRate((Runnable) objective::execute, 500, 500, TimeUnit.MILLISECONDS);
+        objectiveTracker.scheduleAtFixedRate(objective::execute, 500, 500, TimeUnit.MILLISECONDS);
     }
 
     public static Level getLevel() {
@@ -62,12 +62,20 @@ public class GameManager {
         GameManager.level = level;
     }
 
-    public static boolean createTeam(String type) {
-        if (type.equals("Party")) {
-            List<Integer> conditions = AnnotationUtil.checkTeamConditions(Party.class);
-            Team team = new PartyTeam(conditions);
+    public static ModeType getMode() {
+        return mode;
+    }
+
+    public static void setMode(ModeType mode) {
+        GameManager.mode = mode;
+    }
+
+    public static boolean createTeam(Game game) {
+        if (getMode().toString().equalsIgnoreCase("party")) {
+            int[] settings = AnnotationScanner.getModeSettings(game);
+            Team team = new PartyTeam(settings);
             teams.add(team);
-        } else if (type.equals("Solo")) {
+        } else if (getMode().toString().equalsIgnoreCase("solo")) {
             Team team = new SoloTeam();
             teams.add(team);
         }
@@ -83,13 +91,11 @@ public class GameManager {
     }
 
     private static void setGameStateByIdentifier(String identifier, Object... args) throws Exception {
-        Method method = AnnotationUtil.findGameStateWithId(identifier);
-
-        if (method != null) {
-            GameManager.gameState = identifier;
-            GameManager.getGameStatesById().put(identifier, method);
-
-            method.invoke(GameManager.class, args);
+        for (Method method : AnnotationCache.getGameStateCache()) {
+            if (method.getName().contains(identifier)) {
+                GameManager.gameState = identifier;
+                method.invoke(GameManager.class, args);
+            }
         }
     }
 }
