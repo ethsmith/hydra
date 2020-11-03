@@ -42,6 +42,10 @@ public class GameManager {
 
     @Getter
     @Setter
+    private static int objectiveScanId;
+
+    @Getter
+    @Setter
     private static boolean scanningObjectives = false;
     @Getter
     @Setter
@@ -77,7 +81,7 @@ public class GameManager {
         getObjectives().add(objective);
 
         if (!isScanningObjectives()) {
-            plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, GameManager::checkObjectives, 10, 10);
+            setObjectiveScanId(plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, GameManager::checkObjectives, 10, 10));
             setScanningObjectives(true);
         }
     }
@@ -107,7 +111,11 @@ public class GameManager {
         for (Objective objective : objectives)
             if (objective.isComplete()) objectivesCompleted++;
 
-        if (objectivesCompleted == objectives.size())
+        if (objectivesCompleted == objectives.size()) {
             objectivesComplete = true;
+            plugin.getServer().getScheduler().cancelTask(getObjectiveScanId());
+            if (isObjectivesCompleteStateChangeOn())
+                setGameState("results");
+        }
     }
 }
