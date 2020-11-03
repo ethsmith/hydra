@@ -1,8 +1,12 @@
 package org.dragonetmc.hydra.level;
 
 import com.google.gson.JsonElement;
+import lombok.Getter;
+import lombok.Setter;
 
 // TODO Hook into Pterodactyl API for Server Instances
+@Getter
+@Setter
 public class ServerLevel extends Level {
 
     private String address;
@@ -24,14 +28,6 @@ public class ServerLevel extends Level {
     @Override
     public void destroy() {
 
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getUrl() {
-        return url;
     }
 
     public JsonElement getInfo(String key) {

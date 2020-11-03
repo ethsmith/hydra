@@ -1,13 +1,18 @@
 package org.dragonetmc.hydra.game;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.dragonetmc.hydra.GameManager;
 import org.dragonetmc.hydra.annotation.AnnotationScanner;
 import org.dragonetmc.hydra.level.Level;
 import org.dragonetmc.hydra.team.ModeType;
 import org.dragonetmc.hydra.team.Team;
 
+@Getter
+@Setter
 public abstract class Game {
 
     private final String id;
@@ -15,17 +20,19 @@ public abstract class Game {
     private int currentPlayers;
     private int maximumPlayers;
 
-    public Game(String id, Level level) {
+    public Game(Plugin plugin, String id, Level level) {
         this.id = id;
+        GameManager.setPlugin(plugin);
+        GameManager.setGame(this);
         GameManager.setLevel(level);
 
         if (GameManager.getMode() == ModeType.PARTY) {
-            if (!GameManager.createTeam(this))
+            if (!GameManager.createTeam())
                 Bukkit.getServer().getLogger().severe("Could not create party for game");
             else
                 Bukkit.getServer().getLogger().info("Created party for your game!");
         } else if (GameManager.getMode() == ModeType.SOLO) {
-            if (!GameManager.createTeam(this))
+            if (!GameManager.createTeam())
                 Bukkit.getServer().getLogger().severe("Could not create solo play for game");
             else
                 Bukkit.getServer().getLogger().info("Created solo play your game!");
@@ -48,43 +55,6 @@ public abstract class Game {
                 Bukkit.getServer().getLogger().info("Created FFA play for your game!");
             }
         }
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public int getMinimumPlayers() {
-        return minimumPlayers;
-    }
-
-    public void setMinimumPlayers(int minimumPlayers) {
-        this.minimumPlayers = minimumPlayers;
-    }
-
-    public int getCurrentPlayers() {
-        return currentPlayers;
-    }
-
-    public void setCurrentPlayers(int currentPlayers) {
-        this.currentPlayers = currentPlayers;
-    }
-
-    public int getMaximumPlayers() {
-        return maximumPlayers;
-    }
-
-    public void setMaximumPlayers(int maximumPlayers) {
-        this.maximumPlayers = maximumPlayers;
-    }
-
-
-    public final void initialize() {
-
-    }
-
-    public final void finish() {
-
     }
 
     public void join(Player player) {

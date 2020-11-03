@@ -4,16 +4,8 @@ import org.bukkit.entity.Player;
 
 public class SoloTeam extends Team {
 
-    private String name = "solo-player";
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
+    public SoloTeam(String name) {
+        super(name);
     }
 
     @Override
@@ -26,10 +18,5 @@ public class SoloTeam extends Team {
     @Override
     public void leave(Player player) {
         getPlayers().remove(player);
-    }
-
-    @Override
-    public int getSize() {
-        return getPlayers().size();
     }
 }

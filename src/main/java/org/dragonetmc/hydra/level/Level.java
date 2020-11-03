@@ -1,5 +1,10 @@
 package org.dragonetmc.hydra.level;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public abstract class Level {
     private final boolean clone;
     private String id;
@@ -14,26 +19,6 @@ public abstract class Level {
         this.id = id;
         this.source = source;
         this.clone = true;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public boolean isClone() {
-        return clone;
-    }
-
-    public Level getSource() {
-        return source;
-    }
-
-    public void setSource(Level source) {
-        this.source = source;
     }
 
     public abstract void create();

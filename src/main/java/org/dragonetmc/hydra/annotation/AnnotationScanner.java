@@ -24,6 +24,7 @@ public class AnnotationScanner {
 
         if (updateCache)
             AnnotationCache.setGameStateCache(methods);
+
         return methods;
     }
 

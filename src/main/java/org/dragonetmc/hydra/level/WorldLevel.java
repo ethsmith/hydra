@@ -1,5 +1,7 @@
 package org.dragonetmc.hydra.level;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,6 +14,8 @@ import org.dragonetmc.hydra.team.Team;
 import java.io.File;
 import java.util.Random;
 
+@Getter
+@Setter
 public class WorldLevel extends Level {
 
     private World world;
@@ -23,10 +27,6 @@ public class WorldLevel extends Level {
 
     public WorldLevel(String id, Level source) {
         super(id, source);
-    }
-
-    public World getWorld() {
-        return world;
     }
 
     @Override
