@@ -1,5 +1,8 @@
 package org.dragonetmc.hydra;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.plugin.Plugin;
 import org.dragonetmc.hydra.annotation.AnnotationCache;
 import org.dragonetmc.hydra.annotation.AnnotationScanner;
 import org.dragonetmc.hydra.game.Game;
@@ -7,141 +10,96 @@ import org.dragonetmc.hydra.level.Level;
 import org.dragonetmc.hydra.objective.Objective;
 import org.dragonetmc.hydra.team.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class GameManager {
 
-    private static final List<Team> teams = new LinkedList<>();
-    private static final Set<Objective> objectives = new HashSet<>();
-    private static final ScheduledExecutorService objectiveTracker = Executors.newScheduledThreadPool(1);
-    private static String gameState = "initialize";
+    @Getter
+    @Setter
+    private static Plugin plugin;
+    @Getter
+    @Setter
+    private static Game game;
+    @Getter
+    @Setter
     private static Level level;
+    @Getter
+    @Setter
     private static ModeType mode;
-    private static boolean objectivesComplete;
-    private static boolean changeStateOnObjectivesComplete = true;
+
+    @Getter
+    private static final List<Team> teams = new LinkedList<>();
+    @Getter
+    private static final Set<Objective> objectives = new HashSet<>();
+
+    @Getter
+    private static String gameState;
+
+    @Getter
+    @Setter
+    private static boolean scanningObjectives = false;
+    @Getter
+    @Setter
+    private static boolean objectivesComplete = false;
+    @Getter
+    @Setter
+    private static boolean objectivesCompleteStateChangeOn = true;
+    @Getter
+    @Setter
     private static boolean joinable = true;
-    private static String objectivesCompleteState = "results";
-    private static Object[] objectivesCompleteStateArgs = null;
 
-    public static String getGameState() {
-        return gameState;
-    }
+    @Getter
+    @Setter
+    private static Object[] objectivesCompleteStateArgs = {};
 
-    public static Set<Method> getGameStates() {
-        return AnnotationCache.getGameStateCache();
-    }
+    public static void setGameState(String state, Object... args) {
+        if (AnnotationCache.getGameStateCache().isEmpty())
+            AnnotationCache.setGameStateCache(AnnotationScanner.getGameStates(getGame(), true));
 
-    public static void setGameState(String gameState, Object... args) {
-        try {
-            setGameStateByIdentifier(gameState, args);
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (Method method : AnnotationCache.getGameStateCache()) {
+            if (method.getName().contains(state)) {
+                gameState = state;
+                try {
+                    method.invoke(GameManager.class, args);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
-
-    public static List<Team> getTeams() {
-        return teams;
-    }
-
-//    public static Set<Objective> getObjectives() {
-//        return objectives;
-//    }
 
     public static void addObjective(Objective objective) {
-        objectives.add(objective);
-        objectiveTracker.scheduleAtFixedRate(() -> {
-            objective.execute();
-            checkObjectives();
-            if (objectivesComplete)
-                if (changeStateOnObjectivesComplete)
-                    if (objectivesCompleteStateArgs != null)
-                        // The scheduling may be unnecessary, I will test and find out
-                        objectiveTracker.schedule(() -> setGameState(objectivesCompleteState, objectivesCompleteStateArgs), 2, TimeUnit.SECONDS);
-                    else
-                        setGameState(objectivesCompleteState);
-        }, 500, 500, TimeUnit.MILLISECONDS);
+        getObjectives().add(objective);
+
+        if (!isScanningObjectives()) {
+            plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, GameManager::checkObjectives, 10, 10);
+            setScanningObjectives(true);
+        }
     }
 
-    public static void changeStateOnObjectivesComplete(boolean changeState) {
-        GameManager.changeStateOnObjectivesComplete = changeState;
-    }
-
-    public static boolean isJoinable() {
-        return joinable;
-    }
-
-    public static void setJoinable(boolean joinable) {
-        GameManager.joinable = joinable;
-    }
-
-    public static void setObjectivesCompleteState(String objectivesCompleteState, Object... args) {
-        GameManager.objectivesCompleteState = objectivesCompleteState;
-        if (args != null && args.length > 0)
-            objectivesCompleteStateArgs = args;
-    }
-
-    public static void setObjectivesCompleteStateArgs(Object[] objectivesCompleteStateArgs) {
-        GameManager.objectivesCompleteStateArgs = objectivesCompleteStateArgs;
-    }
-
-    public static Level getLevel() {
-        return level;
-    }
-
-    public static void setLevel(Level level) {
-        GameManager.level = level;
-    }
-
-    public static ModeType getMode() {
-        return mode;
-    }
-
-    public static void setMode(ModeType mode) {
-        GameManager.mode = mode;
-    }
-
-    public static boolean isObjectivesComplete() {
-        return objectivesComplete;
-    }
-
-    public static void setObjectivesComplete(boolean objectivesComplete) {
-        GameManager.objectivesComplete = objectivesComplete;
-    }
-
-    public static boolean createTeam(Game game) {
+    public static boolean createTeam() {
         if (getMode().toString().equalsIgnoreCase("party")) {
             int[] settings = AnnotationScanner.getModeSettings(game);
-            Team team = new PartyTeam(settings);
+            Team team = new PartyTeam("party", settings);
             teams.add(team);
         } else if (getMode().toString().equalsIgnoreCase("solo")) {
-            Team team = new SoloTeam();
+            Team team = new SoloTeam("solo");
             teams.add(team);
         }
-        return teams.size() != 0;
+        return !teams.isEmpty();
     }
 
     public static boolean createTeams(int amount) {
         for (int i = 0; i < amount; i++) {
-            Team team = new StandardTeam();
+            Team team = new StandardTeam("team-" + GameManager.getTeams().size());
             teams.add(team);
         }
-        return teams.size() != 0;
-    }
-
-    private static void setGameStateByIdentifier(String identifier, Object... args) throws Exception {
-        for (Method method : AnnotationCache.getGameStateCache()) {
-            if (method.getName().contains(identifier)) {
-                GameManager.gameState = identifier;
-                method.invoke(GameManager.class, args);
-            }
-        }
+        return !teams.isEmpty();
     }
 
     private static void checkObjectives() {
