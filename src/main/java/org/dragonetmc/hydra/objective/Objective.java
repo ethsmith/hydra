@@ -6,7 +6,7 @@ public interface Objective {
 
     boolean isComplete();
 
-    boolean setComplete();
+    void setComplete(boolean complete);
 
     void execute();
 }
