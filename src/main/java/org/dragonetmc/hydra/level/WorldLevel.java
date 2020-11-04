@@ -54,13 +54,19 @@ public class WorldLevel extends Level {
 
     public void teleport(boolean random) {
         Random rand = new Random();
+
         for (Team team : GameManager.getTeams()) {
+            if (team.getSpawns().isEmpty()) {
+                GameManager.getPlugin().getServer().getLogger().severe("No spawns set for team: " + team.getName());
+                return;
+            }
+
             if (random) {
                 for (Player player : team.getPlayers()) {
                     int min = 0;
                     int max = team.getSpawns().size();
                     int index = rand.nextInt(max - min + 1) + min;
-                    player.teleport(team.getSpawns().get(index));
+                    player.teleport(team.getSpawns().get(index - 1));
                 }
             } else {
                 int i = 0;
