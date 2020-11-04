@@ -31,24 +31,11 @@ public class WorldLevel extends Level {
 
     @Override
     public void create() {
-        new Thread(() -> {
-            if (isClone()) {
-                File from = Bukkit.getWorld(getSource().getId()).getWorldFolder();
-                File f = new File(Bukkit.getWorldContainer().getAbsolutePath(), getId());
-
-                if (f.exists()) {
-                    world = Bukkit.getWorld(getId());
-                    return;
-                }
-
-                FileUtil.copy(from, f);
-                new File(f.getAbsolutePath(), "uid.dat").delete();
-            } else {
-                WorldCreator c = new WorldCreator(getId());
-                c.environment(World.Environment.NORMAL);
-                GameManager.getPlugin().getServer().createWorld(c);
-            }
-        }).start();
+        if (isClone()) {
+            world = Bukkit.createWorld(new WorldCreator(getId()).copy(GameManager.getPlugin().getServer().getWorld(getSource().getId())));
+        } else {
+            world = Bukkit.createWorld(new WorldCreator(getId()));
+        }
     }
 
     @Override
