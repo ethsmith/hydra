@@ -33,11 +33,14 @@ public class ObjectiveScoreboard {
                 int i = 0;
                 for (Objective objective : objectives) {
                     String status = ChatColor.RED + "✗";
-
                     if (objective.isComplete())
                         status = ChatColor.GREEN + "✓";
 
-                    board.set(objective.getName() + ": " + status, i);
+                    String stat = "";
+                    if (!objective.getScoreboardStat().isEmpty())
+                        stat = objective.getScoreboardStat();
+
+                    board.set(objective.getName() + ": " + stat + " " + status, i);
                     i++;
                 }
             }
@@ -50,10 +53,5 @@ public class ObjectiveScoreboard {
                 player.setScoreboard(GameManager.getPlugin().getServer().getScoreboardManager().getNewScoreboard());
             }
         }
-    }
-
-    public void update() {
-        remove();
-        show();
     }
 }

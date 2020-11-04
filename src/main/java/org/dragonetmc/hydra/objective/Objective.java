@@ -8,5 +8,7 @@ public interface Objective {
 
     void setComplete(boolean complete);
 
+    String getScoreboardStat();
+
     void execute();
 }
