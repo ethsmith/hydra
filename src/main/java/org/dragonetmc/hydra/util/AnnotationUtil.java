@@ -1,5 +1,7 @@
-package org.dragonetmc.hydra.annotation;
+package org.dragonetmc.hydra.util;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.dragonetmc.hydra.GameManager;
 import org.dragonetmc.hydra.game.Game;
 import org.dragonetmc.hydra.game.GameState;
@@ -10,7 +12,11 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AnnotationScanner {
+public class AnnotationUtil {
+
+    @Getter
+    @Setter
+    private static Set<Method> gameStateCache = new HashSet<>();
 
     // Do not use this if the cache is filled
     public static Set<Method> getGameStates(Game game, boolean updateCache) {
@@ -23,7 +29,7 @@ public class AnnotationScanner {
         }
 
         if (updateCache)
-            AnnotationCache.setGameStateCache(methods);
+            setGameStateCache(methods);
 
         return methods;
     }

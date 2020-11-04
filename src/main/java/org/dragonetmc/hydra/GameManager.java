@@ -3,12 +3,11 @@ package org.dragonetmc.hydra;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.plugin.Plugin;
-import org.dragonetmc.hydra.annotation.AnnotationCache;
-import org.dragonetmc.hydra.annotation.AnnotationScanner;
 import org.dragonetmc.hydra.game.Game;
 import org.dragonetmc.hydra.level.Level;
 import org.dragonetmc.hydra.objective.Objective;
 import org.dragonetmc.hydra.team.*;
+import org.dragonetmc.hydra.util.AnnotationUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,26 +19,20 @@ import java.util.Set;
 public class GameManager {
 
     @Getter
+    private static final List<Team> teams = new LinkedList<>();
+    @Getter
+    private static final Set<Objective> objectives = new HashSet<>();
+    @Getter
     @Setter
     private static Plugin plugin;
-
     @Getter
     @Setter
     private static Game game;
-
     @Getter
     @Setter
     private static Level level;
-
     @Setter
     private static ModeType mode;
-
-    @Getter
-    private static final List<Team> teams = new LinkedList<>();
-
-    @Getter
-    private static final Set<Objective> objectives = new HashSet<>();
-
     @Getter
     private static String gameState;
 
@@ -68,7 +61,7 @@ public class GameManager {
     private static Object[] objectivesCompleteStateArgs = {};
 
     public static ModeType getMode() {
-        return AnnotationScanner.getModeType(game);
+        return AnnotationUtil.getModeType(game);
     }
 
     public static ModeType getCachedMode() {
@@ -79,10 +72,10 @@ public class GameManager {
     }
 
     public static void setGameState(String state, Object... args) {
-        if (AnnotationCache.getGameStateCache().isEmpty())
-            AnnotationCache.setGameStateCache(AnnotationScanner.getGameStates(getGame(), true));
+        if (AnnotationUtil.getGameStateCache().isEmpty())
+            AnnotationUtil.setGameStateCache(AnnotationUtil.getGameStates(getGame(), true));
 
-        for (Method method : AnnotationCache.getGameStateCache()) {
+        for (Method method : AnnotationUtil.getGameStateCache()) {
             if (method.getName().contains(state)) {
                 gameState = state;
                 try {
@@ -107,7 +100,7 @@ public class GameManager {
 
     public static boolean createTeam() {
         if (getMode().toString().equalsIgnoreCase("party")) {
-            int[] settings = AnnotationScanner.getModeSettings(game);
+            int[] settings = AnnotationUtil.getModeSettings(game);
             Team team = new PartyTeam("party", settings);
             teams.add(team);
         } else if (getMode().toString().equalsIgnoreCase("solo")) {

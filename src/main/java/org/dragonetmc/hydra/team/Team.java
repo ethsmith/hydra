@@ -13,10 +13,10 @@ import java.util.Set;
 @Getter
 public abstract class Team {
 
-    @Setter
-    private String name;
     private final Set<Player> players = new HashSet<>();
     private final List<Location> spawns = new LinkedList<>();
+    @Setter
+    private String name;
 
     public Team(String name) {
         this.name = name;

@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
-import org.bukkit.util.FileUtil;
 import org.dragonetmc.hydra.GameManager;
 import org.dragonetmc.hydra.team.Team;
 

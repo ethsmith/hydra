@@ -1,24 +1,26 @@
 package org.dragonetmc.hydra.level;
 
 import lombok.Getter;
-import org.bukkit.World;
+import org.bukkit.Location;
+import org.dragonetmc.hydra.util.SchematicUtil;
 
 public class SchematicLevel extends Level {
 
     @Getter
-    private final World world;
+    private final Location location;
 
-    public SchematicLevel(String id, World world) {
+    public SchematicLevel(String id, Location location) {
         super(id);
-        this.world = world;
+        this.location = location;
     }
 
     @Override
     public void create() {
-        // todo Implement schematic pasting
+        SchematicUtil.pasteSchematic(getId(), location);
     }
 
     @Override
     public void destroy() {
+        SchematicUtil.deleteSchematic(getId(), location);
     }
 }

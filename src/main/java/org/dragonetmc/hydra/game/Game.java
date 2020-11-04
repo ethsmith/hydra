@@ -6,10 +6,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.dragonetmc.hydra.GameManager;
-import org.dragonetmc.hydra.annotation.AnnotationScanner;
 import org.dragonetmc.hydra.level.Level;
 import org.dragonetmc.hydra.team.ModeType;
 import org.dragonetmc.hydra.team.Team;
+import org.dragonetmc.hydra.util.AnnotationUtil;
 
 @Getter
 @Setter
@@ -27,7 +27,7 @@ public abstract class Game {
         GameManager.setLevel(level);
 
         ModeType mode = GameManager.getMode();
-        int[] settings = AnnotationScanner.getModeSettings(this);
+        int[] settings = AnnotationUtil.getModeSettings(this);
         if (mode == ModeType.PARTY) {
             if (!GameManager.createTeam()) {
                 Bukkit.getServer().getLogger().severe("Could not create party for game");
