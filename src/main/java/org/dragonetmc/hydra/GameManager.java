@@ -29,6 +29,7 @@ public class GameManager {
     @Setter
     private static Level level;
 
+    @Setter
     private static ModeType mode;
 
     @Getter
@@ -62,7 +63,7 @@ public class GameManager {
 
     public static ModeType getMode() {
         if (mode == null)
-            mode = AnnotationScanner.getModeType(game);
+            AnnotationScanner.getModeType(game);
         return mode;
     }
 
