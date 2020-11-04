@@ -2,6 +2,8 @@ package org.dragonetmc.hydra.scoreboard;
 
 import fr.minuskube.netherboard.Netherboard;
 import fr.minuskube.netherboard.bukkit.BPlayerBoard;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.dragonetmc.hydra.GameManager;
@@ -10,44 +12,60 @@ import org.dragonetmc.hydra.team.Team;
 
 import java.util.Set;
 
-public class ObjectiveScoreboard {
+public class ObjectiveScoreboard extends Scoreboard {
 
-    private final String name;
+    @Getter
+    @Setter
+    private ChatColor objectiveColor = ChatColor.GREEN;
+
+    @Getter
+    @Setter
+    private ChatColor colonColor = ChatColor.GRAY;
+
+    @Getter
+    @Setter
+    private ChatColor notCompleteColor = ChatColor.RED;
+
+    @Getter
+    @Setter
+    private ChatColor completeColor = ChatColor.GREEN;
 
     public ObjectiveScoreboard() {
-        this.name = "Objectives";
+        super("Objectives");
         show();
     }
 
     public ObjectiveScoreboard(String name) {
-        this.name = name;
+        super(name);
         show();
     }
 
+    @Override
     public void show() {
         for (Team team : GameManager.getTeams()) {
             for (Player player : team.getPlayers()) {
-                BPlayerBoard board = Netherboard.instance().createBoard(player, name);
+                BPlayerBoard board = Netherboard.instance().createBoard(player, getName());
                 Set<Objective> objectives = GameManager.getObjectives();
 
                 int i = 0;
                 for (Objective objective : objectives) {
-                    String status = ChatColor.RED + "✗";
+                    String status = notCompleteColor + "✗";
                     if (objective.isComplete())
-                        status = ChatColor.GREEN + "✓";
+                        status = completeColor + "✓";
 
                     String stat = "";
                     if (!objective.getScoreboardStat().isEmpty())
                         stat = objective.getScoreboardStat();
 
-                    board.set(objective.getName() + ": " + stat + " " + status, i);
+                    board.set(objective.getName() + colonColor + ": " + stat + " " + status, i);
                     i++;
                 }
             }
         }
     }
 
-    public void remove() {
+    @Override
+    public void hide() {
         for (Team team : GameManager.getTeams()) {
             for (Player player : team.getPlayers()) {
                 player.setScoreboard(GameManager.getPlugin().getServer().getScoreboardManager().getNewScoreboard());
