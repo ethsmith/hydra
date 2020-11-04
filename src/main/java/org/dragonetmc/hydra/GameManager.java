@@ -22,9 +22,11 @@ public class GameManager {
     @Getter
     @Setter
     private static Plugin plugin;
+
     @Getter
     @Setter
     private static Game game;
+
     @Getter
     @Setter
     private static Level level;
@@ -34,6 +36,7 @@ public class GameManager {
 
     @Getter
     private static final List<Team> teams = new LinkedList<>();
+
     @Getter
     private static final Set<Objective> objectives = new HashSet<>();
 
@@ -47,12 +50,15 @@ public class GameManager {
     @Getter
     @Setter
     private static boolean scanningObjectives = false;
+
     @Getter
     @Setter
     private static boolean objectivesComplete = false;
+
     @Getter
     @Setter
     private static boolean objectivesCompleteStateChangeOn = true;
+
     @Getter
     @Setter
     private static boolean joinable = true;
