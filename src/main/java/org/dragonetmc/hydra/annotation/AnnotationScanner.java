@@ -29,13 +29,15 @@ public class AnnotationScanner {
     }
 
     public static ModeType getModeType(Game game) {
+        if (GameManager.getCachedMode() != null)
+            return GameManager.getCachedMode();
+
         ModeType type = ModeType.FFA;
         Mode mode = getMode(game);
 
         if (mode != null) {
             type = mode.value();
-            if (GameManager.getMode() == null || GameManager.getMode() != type)
-                GameManager.setMode(type);
+            GameManager.setMode(type);
         }
         return type;
     }

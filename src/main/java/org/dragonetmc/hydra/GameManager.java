@@ -62,9 +62,14 @@ public class GameManager {
     private static Object[] objectivesCompleteStateArgs = {};
 
     public static ModeType getMode() {
-        if (mode == null)
-            AnnotationScanner.getModeType(game);
-        return mode;
+        return AnnotationScanner.getModeType(game);
+    }
+
+    public static ModeType getCachedMode() {
+        if (mode != null)
+            return mode;
+        else
+            return null;
     }
 
     public static void setGameState(String state, Object... args) {
