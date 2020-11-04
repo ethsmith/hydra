@@ -72,6 +72,8 @@ public class GameManager {
                     method.invoke(game, args);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
+                    plugin.getServer().getLogger().warning("Cause of error:\n");
+                    e.getCause();
                 }
             }
         }
