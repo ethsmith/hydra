@@ -27,32 +27,34 @@ public abstract class Game {
         GameManager.setLevel(level);
 
         ModeType mode = GameManager.getMode();
+        int[] settings = AnnotationScanner.getModeSettings(this);
         if (mode == ModeType.PARTY) {
-            if (!GameManager.createTeam())
+            if (!GameManager.createTeam()) {
                 Bukkit.getServer().getLogger().severe("Could not create party for game");
-            else
+            } else {
+                minimumPlayers = settings[0];
+                maximumPlayers = settings[1];
                 Bukkit.getServer().getLogger().info("Created party for your game!");
+            }
         } else if (mode == ModeType.SOLO) {
             if (!GameManager.createTeam())
                 Bukkit.getServer().getLogger().severe("Could not create solo play for game");
             else
                 Bukkit.getServer().getLogger().info("Created solo play your game!");
         } else if (mode == ModeType.TEAMS) {
-            int[] settings = AnnotationScanner.getModeSettings(this);
             if (!GameManager.createTeams(settings[2])) {
-                minimumPlayers = settings[0];
-                maximumPlayers = settings[1];
                 Bukkit.getServer().getLogger().severe("Could not create teams for game");
             } else {
+                minimumPlayers = settings[0];
+                maximumPlayers = settings[1];
                 Bukkit.getServer().getLogger().info("Created teams for your game!");
             }
         } else if (mode == ModeType.FFA) {
-            int[] settings = AnnotationScanner.getModeSettings(this);
             if (!GameManager.createTeams(settings[2])) {
-                minimumPlayers = settings[0];
-                maximumPlayers = settings[1];
                 Bukkit.getServer().getLogger().severe("Could not create FFA play for game");
             } else {
+                minimumPlayers = settings[0];
+                maximumPlayers = settings[1];
                 Bukkit.getServer().getLogger().info("Created FFA play for your game!");
             }
         }
@@ -68,6 +70,7 @@ public abstract class Game {
                     index = i;
             }
             GameManager.getTeams().get(index).join(player);
+            currentPlayers++;
         } else {
             player.kickPlayer("This lobby is not joinable!");
         }
