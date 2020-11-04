@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AnnotationCache {
+
     @Getter
     @Setter
     private static Set<Method> gameStateCache = new HashSet<>();

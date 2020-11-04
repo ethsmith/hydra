@@ -28,8 +28,7 @@ public class GameManager {
     @Getter
     @Setter
     private static Level level;
-    @Getter
-    @Setter
+
     private static ModeType mode;
 
     @Getter
@@ -60,6 +59,12 @@ public class GameManager {
     @Getter
     @Setter
     private static Object[] objectivesCompleteStateArgs = {};
+
+    public static ModeType getMode() {
+        if (mode == null)
+            mode = AnnotationScanner.getModeType(game);
+        return mode;
+    }
 
     public static void setGameState(String state, Object... args) {
         if (AnnotationCache.getGameStateCache().isEmpty())
