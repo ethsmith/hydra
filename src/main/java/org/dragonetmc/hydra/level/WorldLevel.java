@@ -43,8 +43,11 @@ public class WorldLevel extends Level {
 
                 FileUtil.copy(from, f);
                 new File(f.getAbsolutePath(), "uid.dat").delete();
-            } else
-                Bukkit.createWorld(WorldCreator.name(getId()));
+            } else {
+                WorldCreator c = new WorldCreator(getId());
+                c.environment(World.Environment.NORMAL);
+                GameManager.getPlugin().getServer().createWorld(c);
+            }
         }).start();
     }
 
