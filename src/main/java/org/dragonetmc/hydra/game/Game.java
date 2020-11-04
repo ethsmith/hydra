@@ -26,17 +26,18 @@ public abstract class Game {
         GameManager.setGame(this);
         GameManager.setLevel(level);
 
-        if (GameManager.getMode() == ModeType.PARTY) {
+        ModeType mode = GameManager.getMode();
+        if (mode == ModeType.PARTY) {
             if (!GameManager.createTeam())
                 Bukkit.getServer().getLogger().severe("Could not create party for game");
             else
                 Bukkit.getServer().getLogger().info("Created party for your game!");
-        } else if (GameManager.getMode() == ModeType.SOLO) {
+        } else if (mode == ModeType.SOLO) {
             if (!GameManager.createTeam())
                 Bukkit.getServer().getLogger().severe("Could not create solo play for game");
             else
                 Bukkit.getServer().getLogger().info("Created solo play your game!");
-        } else if (GameManager.getMode() == ModeType.TEAMS) {
+        } else if (mode == ModeType.TEAMS) {
             int[] settings = AnnotationScanner.getModeSettings(this);
             if (!GameManager.createTeams(settings[2])) {
                 minimumPlayers = settings[0];
@@ -45,7 +46,7 @@ public abstract class Game {
             } else {
                 Bukkit.getServer().getLogger().info("Created teams for your game!");
             }
-        } else if (GameManager.getMode() == ModeType.FFA) {
+        } else if (mode == ModeType.FFA) {
             int[] settings = AnnotationScanner.getModeSettings(this);
             if (!GameManager.createTeams(settings[2])) {
                 minimumPlayers = settings[0];
