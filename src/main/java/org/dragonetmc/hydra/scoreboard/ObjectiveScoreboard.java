@@ -57,7 +57,7 @@ public class ObjectiveScoreboard extends Scoreboard {
                     if (!objective.getScoreboardStat().isEmpty())
                         stat = objective.getScoreboardStat();
 
-                    board.set(objective.getName() + colonColor + ": " + stat + " " + status, i);
+                    board.set(objectiveColor + objective.getName() + colonColor + ": " + stat + " " + status, i);
                     i++;
                 }
             }
