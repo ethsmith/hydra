@@ -69,7 +69,7 @@ public class GameManager {
             if (method.getName().contains(state)) {
                 gameState = state;
                 try {
-                    method.invoke(GameManager.class, args);
+                    method.invoke(null, args);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
