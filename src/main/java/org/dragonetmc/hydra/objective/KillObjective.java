@@ -16,17 +16,14 @@ public class KillObjective implements Objective {
 
     @Getter
     private final Map<Player, Integer> kills = new HashMap<>();
-
+    @Getter
+    private final EventCriteria criteria;
     @Getter
     @Setter
     private int killGoal;
-
     @Getter
     @Setter
     private boolean complete = false;
-
-    @Getter
-    private final EventCriteria criteria;
 
     public KillObjective(EventCriteria criteria, int killGoal) {
         this.killGoal = killGoal;

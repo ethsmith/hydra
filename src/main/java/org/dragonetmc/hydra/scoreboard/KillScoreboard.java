@@ -5,7 +5,6 @@ import fr.minuskube.netherboard.bukkit.BPlayerBoard;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.dragonetmc.hydra.GameManager;
-import org.dragonetmc.hydra.event.EventCriteria;
 import org.dragonetmc.hydra.objective.KillObjective;
 import org.dragonetmc.hydra.objective.Objective;
 
@@ -17,13 +16,11 @@ public class KillScoreboard extends Scoreboard {
     public KillScoreboard() {
         super("Kills");
         checkForDeps();
-        show();
     }
 
     public KillScoreboard(String name) {
         super(name);
         checkForDeps();
-        show();
     }
 
     @Override
