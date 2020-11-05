@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.dragonetmc.hydra.GameManager;
+import org.dragonetmc.hydra.event.EventCriteria;
 import org.dragonetmc.hydra.team.Team;
 
 import java.util.HashMap;
@@ -24,8 +25,15 @@ public class KillObjective implements Objective {
     @Setter
     private boolean complete = false;
 
-    public KillObjective(int killGoal) {
+    @Getter
+    private final EventCriteria criteria;
+
+    public KillObjective(EventCriteria criteria, int killGoal) {
         this.killGoal = killGoal;
+        this.criteria = criteria;
+
+        if (!(criteria.equals(EventCriteria.PLAYERS) || criteria.equals(EventCriteria.MOBS) || criteria.equals(EventCriteria.MOBS_AND_PLAYERS)))
+            throw new IllegalArgumentException("Valid arguments for kill scoreboard: PLAYERS, MOBS, and MOBS_AND_PLAYERS");
 
         for (Team team : GameManager.getTeams()) {
             for (Player player : team.getPlayers())

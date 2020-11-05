@@ -1,4 +1,4 @@
-package org.dragonetmc.hydra.events;
+package org.dragonetmc.hydra.event;
 
 public enum EventCriteria {
 

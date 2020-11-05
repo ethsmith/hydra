@@ -5,7 +5,7 @@ import fr.minuskube.netherboard.bukkit.BPlayerBoard;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.dragonetmc.hydra.GameManager;
-import org.dragonetmc.hydra.events.EventCriteria;
+import org.dragonetmc.hydra.event.EventCriteria;
 import org.dragonetmc.hydra.objective.KillObjective;
 import org.dragonetmc.hydra.objective.Objective;
 
@@ -14,15 +14,15 @@ public class KillScoreboard extends Scoreboard {
     @Getter
     private KillObjective killObjective;
 
-    public KillScoreboard(EventCriteria criteria) {
+    public KillScoreboard() {
         super("Kills");
-        checkForDeps(criteria);
+        checkForDeps();
         show();
     }
 
-    public KillScoreboard(String name, EventCriteria criteria) {
+    public KillScoreboard(String name) {
         super(name);
-        checkForDeps(criteria);
+        checkForDeps();
         show();
     }
 
@@ -40,10 +40,7 @@ public class KillScoreboard extends Scoreboard {
             player.setScoreboard(GameManager.getPlugin().getServer().getScoreboardManager().getNewScoreboard());
     }
 
-    private void checkForDeps(EventCriteria criteria) {
-        if (!(criteria.equals(EventCriteria.PLAYERS) || criteria.equals(EventCriteria.MOBS) || criteria.equals(EventCriteria.MOBS_AND_PLAYERS)))
-            throw new IllegalArgumentException("Valid arguments for kill scoreboard: PLAYERS, MOBS, and MOBS_AND_PLAYERS");
-
+    private void checkForDeps() {
         boolean killObjectiveRegistered = false;
         for (Objective objective : GameManager.getObjectives()) {
             if (objective instanceof KillObjective) {
