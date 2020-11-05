@@ -18,7 +18,6 @@ public abstract class Scoreboard {
     @Setter
     private int updateInterval = 10;
 
-    @Getter
     private BukkitTask updateTask = null;
 
     public Scoreboard(String name) {
