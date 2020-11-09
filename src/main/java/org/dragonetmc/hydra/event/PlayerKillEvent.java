@@ -30,6 +30,9 @@ public class PlayerKillEvent implements Listener {
         LivingEntity entity = e.getEntity();
         EventCriteria criteria = killObjective.getCriteria();
 
+        if (killer == null)
+            return;
+
         if (!killObjective.getKills().containsKey(killer)) {
             for (Team team : GameManager.getTeams()) {
                 for (Player player : team.getPlayers()) {
@@ -38,6 +41,9 @@ public class PlayerKillEvent implements Listener {
                 }
             }
         }
+
+        if (!killObjective.getKills().containsKey(killer))
+            return;
 
         if (entity instanceof Player) {
             if (criteria.equals(EventCriteria.PLAYERS) || criteria.equals(EventCriteria.MOBS_AND_PLAYERS))
