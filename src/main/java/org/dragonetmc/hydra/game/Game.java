@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.dragonetmc.hydra.GameManager;
+import org.dragonetmc.hydra.event.PlayerKillEvent;
 import org.dragonetmc.hydra.level.Level;
 import org.dragonetmc.hydra.team.ModeType;
 import org.dragonetmc.hydra.team.Team;
@@ -16,13 +17,19 @@ import org.dragonetmc.hydra.util.AnnotationUtil;
 public abstract class Game {
 
     private final String id;
+
     private int minimumPlayers;
+
     private int currentPlayers;
+
     private int maximumPlayers;
 
     public Game(Plugin plugin, String id, Level level) {
         this.id = id;
         GameManager.setPlugin(plugin);
+
+        plugin.getServer().getPluginManager().registerEvents(new PlayerKillEvent(), plugin);
+
         GameManager.setGame(this);
         GameManager.setLevel(level);
 

@@ -15,6 +15,9 @@ import java.util.Set;
 public class ObjectiveScoreboard extends Scoreboard {
 
     @Getter
+    private static boolean enabled = false;
+
+    @Getter
     @Setter
     private ChatColor objectiveColor = ChatColor.GREEN;
 
@@ -33,11 +36,13 @@ public class ObjectiveScoreboard extends Scoreboard {
     public ObjectiveScoreboard() {
         super("Objectives");
         show();
+        enabled = true;
     }
 
     public ObjectiveScoreboard(String name) {
         super(name);
         show();
+        enabled = true;
     }
 
     @Override

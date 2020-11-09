@@ -11,16 +11,21 @@ import org.dragonetmc.hydra.objective.Objective;
 public class KillScoreboard extends Scoreboard {
 
     @Getter
+    private static boolean enabled = false;
+
+    @Getter
     private KillObjective killObjective;
 
     public KillScoreboard() {
         super("Kills");
         checkForDeps();
+        enabled = true;
     }
 
     public KillScoreboard(String name) {
         super(name);
         checkForDeps();
+        enabled = true;
     }
 
     @Override
