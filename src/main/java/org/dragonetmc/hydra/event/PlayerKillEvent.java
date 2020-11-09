@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.dragonetmc.hydra.GameManager;
 import org.dragonetmc.hydra.objective.KillObjective;
 import org.dragonetmc.hydra.objective.Objective;
+import org.dragonetmc.hydra.team.Team;
 
 public class PlayerKillEvent implements Listener {
 
@@ -28,6 +29,15 @@ public class PlayerKillEvent implements Listener {
         Player killer = e.getEntity().getKiller();
         LivingEntity entity = e.getEntity();
         EventCriteria criteria = killObjective.getCriteria();
+
+        if (!killObjective.getKills().containsKey(killer)) {
+            for (Team team : GameManager.getTeams()) {
+                for (Player player : team.getPlayers()) {
+                    if (player.equals(killer))
+                        killObjective.getKills().put(killer, 0);
+                }
+            }
+        }
 
         if (entity instanceof Player) {
             if (criteria.equals(EventCriteria.PLAYERS) || criteria.equals(EventCriteria.MOBS_AND_PLAYERS))
